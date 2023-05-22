@@ -8,21 +8,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-
-
-void collatz_sequence(int n, int child_num) {
-    while (n != 1) {
-        printf("Child %d: %d\n", child_num, n);
-
-        if (n % 2 == 0)
-            n = n / 2;
-        else
-            n = (3 * n) + 1;
-    }
-
-    printf("Child %d: 1\n", child_num);
-}
+#include <unistd.h>
+#include <sys/wait.h>
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -43,7 +30,18 @@ int main(int argc, char *argv[]) {
     pid1 = fork();
     if (pid1 == 0) {
         // Child process 1
-        collatz_sequence(n, 1);
+        printf("From Child1, pid=%d init: number=%d\n", getpid(), n);
+
+        while (n != 1) {
+            if (n % 2 == 0)
+                n = n / 2;
+            else
+                n = (3 * n) + 1;
+
+            printf("From Child1: number=%d\n", n);
+        }
+
+        printf("From Child1, pid=%d Im done!\n", getpid());
         return 0;
     } else if (pid1 < 0) {
         printf("Failed to fork child process 1.\n");
@@ -53,7 +51,18 @@ int main(int argc, char *argv[]) {
     pid2 = fork();
     if (pid2 == 0) {
         // Child process 2
-        collatz_sequence(n_plus_4, 2);
+        printf("From Child2, pid=%d init: number=%d\n", getpid(), n_plus_4);
+
+        while (n_plus_4 != 1) {
+            if (n_plus_4 % 2 == 0)
+                n_plus_4 = n_plus_4 / 2;
+            else
+                n_plus_4 = (3 * n_plus_4) + 1;
+
+            printf("From Child2: number=%d\n", n_plus_4);
+        }
+
+        printf("From Child2, pid=%d Im done!\n", getpid());
         return 0;
     } else if (pid2 < 0) {
         printf("Failed to fork child process 2.\n");
@@ -61,9 +70,13 @@ int main(int argc, char *argv[]) {
     }
 
     // Parent process
+    printf("This is the Parent waiting!\n");
+
     int status;
     wait(&status);
     wait(&status);
+
+    printf("All my Children Complete\n");
 
     return 0;
 }
