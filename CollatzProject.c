@@ -1,9 +1,14 @@
 /* ----------------------------------------------------------------
- *    File: CollatzProject.c
- *  Author: Luke Hepokoski & Jose Suarez
- *   Class: COP 4610 Summer 2023
- *   Panther IDs: 6446285 & 6248985
- * Purpose: Write a program to generate a sequence in child process
+ * File: CollatzProject.c
+ * Authors: Luke Hepokoski & Jose Suarez
+ * Class: COP 4610 Summer 2023
+ * Panther IDs: 6446285 & 6248985
+ * Purpose: This program takes a single command-line argument,
+ * which should be a positive integer less than 40.
+ * It generates two child processes that calculate and print the
+ * Collatz sequence for the given number and its incremented value.
+ * The parent process waits for both child processes to complete
+ * and then prints a completion message.
  * ---------------------------------------------------------------- */
 
 #include <stdio.h>
@@ -20,6 +25,7 @@ int main(int argc, char *argv[]) {
     int n = atoi(argv[1]);
     int n_plus_4 = n + 4;
 
+    // checks if n is within valid range
     if (n <= 0 || n >= 40) {
         printf("Number must be greater than zero and less than 40.\n");
         return 1;
@@ -27,6 +33,7 @@ int main(int argc, char *argv[]) {
 
     pid_t pid1, pid2;
 
+    // forks 1st process to generate
     pid1 = fork();
     if (pid1 == 0) {
         // Child process 1
@@ -47,7 +54,7 @@ int main(int argc, char *argv[]) {
         printf("Failed to fork child process 1.\n");
         return 1;
     }
-
+    // forks 2nd process to generate
     pid2 = fork();
     if (pid2 == 0) {
         // Child process 2
