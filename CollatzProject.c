@@ -1,5 +1,5 @@
 /* ----------------------------------------------------------------
- * File: CollatzProject.c
+ * File: LukeHepokoski.c
  * Authors: Luke Hepokoski & Jose Suarez
  * Class: COP 4610 Summer 2023
  * Panther IDs: 6446285 & 6248985
@@ -22,28 +22,28 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int n = atoi(argv[1]);
+    int n = atoi(argv[1]); // converts console input string into int
     int n_plus_4 = n + 4;
 
     // checks if n is within valid range
     if (n <= 0 || n >= 40) {
-        printf("Number must be greater than zero and less than 40.\n");
-        return 1;
+        return 1; // exits if n is not within valid range
     }
 
-    pid_t pid1, pid2;
+    pid_t pid1, pid2; // declare process variables
 
-    // forks 1st process to generate
+    // forks 1st process to generate sequence
     pid1 = fork();
     if (pid1 == 0) {
         // Child process 1
         printf("From Child1, pid=%d init: number=%d\n", getpid(), n);
 
+        // Collatz algorithm
         while (n != 1) {
-            if (n % 2 == 0)
+            if (n % 2 == 0) // if n % 2 == 0 means n is even
                 n = n / 2;
             else
-                n = (3 * n) + 1;
+                n = (3 * n) + 1; // if n is odd
 
             printf("From Child1: number=%d\n", n);
         }
@@ -51,20 +51,20 @@ int main(int argc, char *argv[]) {
         printf("From Child1, pid=%d Im done!\n", getpid());
         return 0;
     } else if (pid1 < 0) {
-        printf("Failed to fork child process 1.\n");
-        return 1;
+        return 1; // exits if process fails
     }
-    // forks 2nd process to generate
+    // forks 2nd process to generate sequence
     pid2 = fork();
     if (pid2 == 0) {
         // Child process 2
         printf("From Child2, pid=%d init: number=%d\n", getpid(), n_plus_4);
 
+        // Collatz algorithm
         while (n_plus_4 != 1) {
-            if (n_plus_4 % 2 == 0)
+            if (n_plus_4 % 2 == 0) // if n % 2 == 0 means n is even
                 n_plus_4 = n_plus_4 / 2;
             else
-                n_plus_4 = (3 * n_plus_4) + 1;
+                n_plus_4 = (3 * n_plus_4) + 1; // if n is odd use odd algorithm
 
             printf("From Child2: number=%d\n", n_plus_4);
         }
@@ -72,8 +72,7 @@ int main(int argc, char *argv[]) {
         printf("From Child2, pid=%d Im done!\n", getpid());
         return 0;
     } else if (pid2 < 0) {
-        printf("Failed to fork child process 2.\n");
-        return 1;
+        return 1; // exits if process fails
     }
 
     // Parent process
