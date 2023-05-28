@@ -2,7 +2,7 @@
  *    File: CollatzProject.c
  *  Author: Luke Hepokoski & Jose Suarez
  *   Class: COP 4610 Summer 2023
- *   Panther IDS: 6446285 &
+ *   Panther IDs: 6446285 & 6248985
  * Purpose: Write a program to generate a sequence in child process
  * ---------------------------------------------------------------- */
 
